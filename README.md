@@ -31,60 +31,17 @@ diagram, describing the functions of the BIU and EU.
 
 ### Theory
 
-The Intel 8086 is a 16-bit microprocessor with a 16-bit data bus and a
-20-bit address bus. It can address up to 1 MB of physical memory. Its
-architecture is divided into two major units:
+The 8086 microprocessor is a 16-bit microprocessor developed by Intel. It has a 16-bit data bus and a 20-bit address bus, allowing it to access up to 1 MB of memory. The architecture of the 8086 microprocessor is divided into two main units: the Bus Interface Unit (BIU) and the Execution Unit (EU).
 
-**1. Bus Interface Unit (BIU)** - Generates the 20-bit physical
-address. - Fetches instructions from memory. - Reads data from and
-writes data to memory and I/O devices. - Contains the segment registers:
-CS, DS, SS, and ES. - Contains the Instruction Pointer (IP). - Includes
-a 6-byte instruction prefetch queue, allowing instruction fetching and
-execution to overlap.
+The Bus Interface Unit (BIU) is responsible for communication between the microprocessor and memory or input/output devices. It fetches instructions from memory, reads and writes data, generates the 20-bit physical address, and contains the segment registers CS, DS, SS and ES, along with the Instruction Pointer (IP). It also contains a 6-byte instruction queue to store prefetched instructions.
 
-**2. Execution Unit (EU)** - Decodes and executes instructions fetched
-by the BIU. - Contains the Arithmetic Logic Unit (ALU). - Contains
-general-purpose registers AX, BX, CX, and DX, which can be accessed as
-8-bit halves. - Contains pointer and index registers SP, BP, SI, and
-DI. - Contains the Flag Register, which records status and control
-flags. - Requests the BIU to perform memory and I/O transfers when
-required.
+The Execution Unit (EU) is responsible for decoding and executing instructions. It performs arithmetic and logical operations using the Arithmetic Logic Unit (ALU). It contains general-purpose registers AX, BX, CX and DX, pointer and index registers SP, BP, SI and DI, and a flag register that stores the status of operations.
+
+The BIU fetches instructions and stores them in the instruction queue, while the EU takes these instructions, decodes them and executes them. Both units can work in parallel, allowing the BIU to fetch the next instructions while the EU executes the current ones. This improves the overall processing speed and efficiency of the 8086 microprocessor.
 
 ### Simplified Block Diagram
 
-``` text
-                 +-----------------------------------+
-                 |          8086 MICROPROCESSOR     |
-                 |                                   |
-Memory / I/O <-->+-----------------------------------+<--> System Bus
-                 |       Bus Interface Unit (BIU)    |
-                 |  +-----------------------------+  |
-                 |  | Segment Registers            |  |
-                 |  | CS, DS, SS, ES               |  |
-                 |  +-----------------------------+  |
-                 |  | Instruction Pointer (IP)     |  |
-                 |  +-----------------------------+  |
-                 |  | 6-byte Instruction Queue     |  |
-                 |  +-----------------------------+  |
-                 |  | Address Generation / Bus     |  |
-                 |  | Control                      |  |
-                 |  +---------------+-------------+  |
-                 |                  |                |
-                 |       Instruction/Data Interface  |
-                 |                  |                |
-                 |       Execution Unit (EU)         |
-                 |  +-----------------------------+  |
-                 |  | Instruction Decoder &       |  |
-                 |  | Control Circuitry           |  |
-                 |  +-----------------------------+  |
-                 |  | ALU                         |  |
-                 |  +-----------------------------+  |
-                 |  | AX, BX, CX, DX               |  |
-                 |  | SP, BP, SI, DI               |  |
-                 |  | Flag Register                |  |
-                 |  +-----------------------------+  |
-                 +-----------------------------------+
-```
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/2b6730ba-0659-4aad-a339-6f951ac92b72" />
 
 ### Working Principle
 
