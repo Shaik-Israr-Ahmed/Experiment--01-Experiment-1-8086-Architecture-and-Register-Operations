@@ -1,4 +1,4 @@
-# Experiment--01-Experiment-1-8086-Architecture-and-Register-Operations
+# Experiment--02-Experiment-1-8086-Architecture-and-Register-Operations
  
 ## Aim
 
@@ -31,25 +31,49 @@ diagram, describing the functions of the BIU and EU.
 
 ### Theory
 
-The 8086 microprocessor is a 16-bit microprocessor developed by Intel. It has a 16-bit data bus and a 20-bit address bus, allowing it to access up to 1 MB of memory. The architecture of the 8086 microprocessor is divided into two main units: the Bus Interface Unit (BIU) and the Execution Unit (EU).
+8086 Microprocessor
 
-The Bus Interface Unit (BIU) is responsible for communication between the microprocessor and memory or input/output devices. It fetches instructions from memory, reads and writes data, generates the 20-bit physical address, and contains the segment registers CS, DS, SS and ES, along with the Instruction Pointer (IP). It also contains a 6-byte instruction queue to store prefetched instructions.
+The Intel 8086 is a 16-bit microprocessor developed by Intel. It has a 16-bit data bus and a 20-bit address bus, which allows it to access up to 1 MB of memory.
 
-The Execution Unit (EU) is responsible for decoding and executing instructions. It performs arithmetic and logical operations using the Arithmetic Logic Unit (ALU). It contains general-purpose registers AX, BX, CX and DX, pointer and index registers SP, BP, SI and DI, and a flag register that stores the status of operations.
+The 8086 microprocessor is divided into two major functional units:
+1. Bus Interface Unit (BIU)
+2. Execution Unit (EU)
+3. BUS INTERFACE UNIT (BIU)
+The BIU is responsible for communication between the microprocessor and memory or input/output devices.
 
-The BIU fetches instructions and stores them in the instruction queue, while the EU takes these instructions, decodes them and executes them. Both units can work in parallel, allowing the BIU to fetch the next instructions while the EU executes the current ones. This improves the overall processing speed and efficiency of the 8086 microprocessor.
+Functions of BIU:
+1. Generates the 20-bit physical address.
+2. Fetches instructions from memory.
+3. Reads data from memory and writes data into memory.
+4. Communicates with input/output devices.
+5. Contains segment registers CS, DS, SS and ES.
+6. Contains the Instruction Pointer (IP).
+7. Has a 6-byte instruction prefetch queue.
+4. EXECUTION UNIT (EU)
+The EU is responsible for decoding and executing instructions fetched by the BIU.
+
+Functions of EU:
+1. Decodes the instructions received from the BIU.
+2. Executes arithmetic and logical operations.
+3. Contains the Arithmetic Logic Unit (ALU).
+4. Contains general-purpose registers AX, BX, CX and DX.
+5. Contains pointer and index registers SP, BP, SI and DI.
+6. Contains the Flag Register to store status and control flags.
+7. Requests the BIU for memory and I/O operations.
 
 ### Simplified Block Diagram
 
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/2b6730ba-0659-4aad-a339-6f951ac92b72" />
+<img width="2048" height="1536" alt="image" src="https://github.com/user-attachments/assets/2ec6a809-4f91-41a6-ae5d-37f225c06785" />
 
 ### Working Principle
 
-The 8086 microprocessor works using two main units: the Bus Interface Unit (BIU) and the Execution Unit (EU). The BIU fetches instructions from memory and stores them in a 6-byte instruction queue. It also generates the physical address and handles data transfer between the processor, memory and input/output devices.
-
-The EU takes instructions from the queue, decodes them and executes them using the Arithmetic Logic Unit (ALU) and registers. The ALU performs arithmetic and logical operations, while the flag register stores the status of the results.
-
-While the EU executes the current instructions, the BIU can fetch the next instructions simultaneously. This overlapping of instruction fetching and execution improves the speed and efficiency of the microprocessor. If a jump or branch instruction occurs, the instruction queue is updated with instructions from the new address.
+1. The BIU fetches instructions from memory.
+2. The fetched instructions are stored in the 6-byte instruction queue.
+3. The EU takes instructions from the queue.
+4. The EU decodes and executes the instructions.
+5. If memory or I/O access is required, the EU requests the BIU.
+6. The BIU performs the required data transfer.
+This process allows instruction fetching and execution to overlap, improving the performance of the microprocessor. This technique is called pipelining.
 
 ------------------------------------------------------------------------
 
@@ -72,24 +96,10 @@ from one register to another and store the result in memory.
 
 ### Assembly Program
 
-.MODEL SMALL
-.STACK 100H
-.DATA
-RESULT DW ?
-
-.CODE
-MAIN PROC
-    MOV AX, @DATA
-    MOV DS, AX
-
-    MOV AX, 1234H
-    MOV BX, AX
-    MOV RESULT, BX
-
-    MOV AH, 4CH
-    INT 21H
-MAIN ENDP
-END MAIN
+MOV AX, 1234H
+MOV BX, AX
+MOV [0000H], BX
+HLT
 
 ### Expected Result
 
@@ -99,7 +109,15 @@ RESULT = 1234H (stored in memory)
 
 ### Explanation
 
-The program starts by initializing the data segment using MOV AX, @DATA and MOV DS, AX. The instruction MOV AX, 1234H loads the 16-bit hexadecimal value 1234H into register AX. Then, MOV BX, AX transfers the value from AX to BX, and MOV RESULT, BX stores the value of BX in the memory variable RESULT. Finally, MOV AH, 4CH and INT 21H terminate the program. Thus, the value 1234H is successfully transferred from AX to BX and stored in memory.
+1. MOV AX, 1234H – Loads the 16-bit hexadecimal value 1234H into the AX register.
+
+2. MOV BX, AX – Copies the contents of AX into the BX register.
+
+3. MOV [0000H], BX – Stores the 16-bit value from BX into the memory location DS:0000H.
+
+4. HLT – Stops the execution of the program.
+
+Result: The value 1234H is successfully transferred from AX to BX and stored in memory.
 ------------------------------------------------------------------------
 
 ## Part (c): Exchange Two 16-bit Memory Locations Using Registers
@@ -121,27 +139,25 @@ Write an 8086 assembly language program to exchange the contents of two
 8. Stop.
 
 ### Assembly Program
-.MODEL SMALL
-.STACK 100H
-.DATA
-NUM1 DW 1234H
-NUM2 DW 5678H
 
-.CODE
-MAIN PROC
-    MOV AX, @DATA
-    MOV DS, AX
+; Initialize two memory locations
 
-    MOV AX, NUM1
-    MOV BX, NUM2
+MOV AX, 1111H
+MOV [0000H], AX
 
-    MOV NUM1, BX
-    MOV NUM2, AX
+MOV AX, 2222H
+MOV [0002H], AX
 
-    MOV AH, 4CH
-    INT 21H
-MAIN ENDP
-END MAIN
+; Exchange the values
+
+MOV AX, [0000H]
+MOV BX, [0002H]
+
+MOV [0000H], BX
+MOV [0002H], AX
+
+HLT
+
  
 
 ### Expected Result
@@ -150,7 +166,15 @@ NUM1	                             1234H	                     5678H
 NUM2	                             5678H	                     1234H
 
 ### Explanation
-The program starts by initializing the data segment using MOV AX, @DATA and MOV DS, AX. The instruction MOV AX, NUM1 loads the contents of the first memory location into register AX, and MOV BX, NUM2 loads the contents of the second memory location into register BX. Then, MOV NUM1, BX stores the value of BX in NUM1, and MOV NUM2, AX stores the value of AX in NUM2, thereby exchanging their contents. Finally, MOV AH, 4CH and INT 21H terminate the program. Thus, the contents of the two 16-bit memory locations are successfully exchanged using registers AX and BX.
+1. MOV AX, 1111H – Loads the first 16-bit value into AX.
+2. MOV [0000H], AX – Stores the value in the first memory location.
+3. MOV AX, 2222H – Loads the second 16-bit value into AX.
+4. MOV [0002H], AX – Stores the value in the second memory location.
+5. MOV AX, [0000H] – Loads the first memory value into AX.
+6. MOV BX, [0002H] – Loads the second memory value into BX.
+7. MOV [0000H], BX – Stores the second value in the first memory location.
+8. MOV [0002H], AX – Stores the first value in the second memory location.
+9. HLT – Stops program execution.
   
 ------------------------------------------------------------------------
 
@@ -165,6 +189,12 @@ The program starts by initializing the data segment using MOV AX, @DATA and MOV 
 7.  Record the observed results and compare them with the expected
     results.
 ## Screenshot of the results 
+
+part (b)
+<img width="1920" height="1080" alt="Screenshot 2026-11-17 182012" src="https://github.com/user-attachments/assets/cf8b76ad-b55c-41e8-989c-57687c6f0e3e" />
+
+part (c)
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/44ad2568-354b-4a00-9a1b-0e0d6083eabd" />
 
 
 
